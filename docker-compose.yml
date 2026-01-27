@@ -1,0 +1,5 @@
+services:
+  user-service:
+    build: .
+    ports:
+      - "8081:8080"
