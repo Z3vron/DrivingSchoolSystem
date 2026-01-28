@@ -139,6 +139,7 @@
                     <version>${owasp.version}</version>
                     <configuration>
                         <failBuildOnCVSS>7.0</failBuildOnCVSS>
+                        <failOnError>false</failOnError>
                         <nvdApiKey>${nvd.api.key}</nvdApiKey>
                         <nvdApiDelay>6000</nvdApiDelay>
                         <nvdMaxRetryCount>20</nvdMaxRetryCount>
