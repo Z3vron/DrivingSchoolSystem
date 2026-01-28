@@ -23,6 +23,20 @@ jobs:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: ./mvnw -B clean verify -Dnvd.api.key=${{ secrets.NVD_API_KEY }}
 
+      - name: NVD key diagnostics
+        if: ${{ always() }}
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: |
+          if [ -z "$NVD_API_KEY" ]; then
+            echo "NVD_API_KEY is not set"
+            exit 1
+          fi
+          echo "NVD_API_KEY is set (length: ${#NVD_API_KEY})"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -H "apiKey: ${NVD_API_KEY}" \
+            "https://services.nvd.nist.gov/rest/json/cves/2.0?resultsPerPage=1")
+          echo "NVD API HTTP status: ${STATUS}"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
