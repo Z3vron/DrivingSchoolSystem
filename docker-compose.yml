@@ -1,5 +1,70 @@
 services:
-  user-service:
-    build: .
+  user-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
     ports:
-      - "8081:8080"
+      - "5433:5432"
+
+  booking-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bookingdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5434:5432"
+
+  rewards-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: rewardsdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5435:5432"
+
+  user-service:
+    build: ./user-service
+    environment:
+      DB_HOST: user-db
+      DB_PORT: 5432
+      DB_NAME: userdb
+      DB_USER: postgres
+      DB_PASSWORD: secret
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-db
+
+  booking-service:
+    build: ./booking-service
+    environment:
+      SERVER_PORT: 8082
+      DB_HOST: booking-db
+      DB_PORT: 5432
+      DB_NAME: bookingdb
+      DB_USER: postgres
+      DB_PASSWORD: secret
+      USER_SERVICE_URL: http://user-service:8080
+    ports:
+      - "8082:8082"
+    depends_on:
+      - booking-db
+      - user-service
+
+  rewards-service:
+    build: ./rewards-service
+    environment:
+      SERVER_PORT: 8083
+      DB_HOST: rewards-db
+      DB_PORT: 5432
+      DB_NAME: rewardsdb
+      DB_USER: postgres
+      DB_PASSWORD: secret
+    ports:
+      - "8083:8083"
+    depends_on:
+      - rewards-db
