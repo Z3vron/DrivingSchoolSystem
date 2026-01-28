@@ -148,9 +148,10 @@
                     </configuration>
                     <executions>
                         <execution>
+                            <inherited>false</inherited>
                             <phase>verify</phase>
                             <goals>
-                                <goal>check</goal>
+                                <goal>aggregate</goal>
                             </goals>
                         </execution>
                     </executions>
