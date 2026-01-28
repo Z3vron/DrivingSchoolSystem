@@ -140,8 +140,10 @@
                     <configuration>
                         <failBuildOnCVSS>7.0</failBuildOnCVSS>
                         <nvdApiKey>${nvd.api.key}</nvdApiKey>
-                        <nvdApiDelay>2000</nvdApiDelay>
-                        <nvdMaxRetryCount>6</nvdMaxRetryCount>
+                        <nvdApiDelay>6000</nvdApiDelay>
+                        <nvdMaxRetryCount>20</nvdMaxRetryCount>
+                        <nvdValidForHours>24</nvdValidForHours>
+                        <dataDirectory>${user.home}/.dependency-check</dataDirectory>
                         <suppressionFiles>
                             <suppressionFile>config/owasp/suppressions.xml</suppressionFile>
                         </suppressionFiles>
