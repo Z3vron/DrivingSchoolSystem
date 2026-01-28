@@ -24,7 +24,6 @@ jobs:
         run: ./mvnw -B clean verify -Dnvd.api.key=${{ secrets.NVD_API_KEY }}
 
       - name: NVD key diagnostics
-        if: ${{ always() }}
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
