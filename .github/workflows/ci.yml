@@ -21,7 +21,7 @@ jobs:
       - name: Build and test
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: ./mvnw -B clean verify
+        run: ./mvnw -B clean verify -Dnvd.api.key=${{ secrets.NVD_API_KEY }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
