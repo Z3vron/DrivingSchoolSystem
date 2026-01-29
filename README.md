@@ -33,6 +33,19 @@ Porty:
 - booking-service: http://localhost:8082
 - rewards-service: http://localhost:8083
 
+## Swagger UI (Web UI dla API)
+Po uruchomieniu serwisow:
+- user-service: http://localhost:8080/swagger-ui/index.html (spec: /v3/api-docs)
+- booking-service: http://localhost:8082/swagger-ui/index.html (spec: /v3/api-docs)
+- rewards-service: http://localhost:8083/swagger-ui/index.html (spec: /v3/api-docs)
+
+Jesli po wejściu na Swagger UI widzisz `500 /v3/api-docs`, przebuduj obrazy po zmianie zaleznosci:
+```
+./mvnw -B -Pskip-security clean verify
+./mvnw -B -pl user-service,booking-service,rewards-service -am package
+docker compose up --build
+```
+
 ## Skan bezpieczeństwa (NVD API Key)
 OWASP Dependency-Check wymaga klucza NVD. Ustaw go w terminalu przed uruchomieniem buildu:
 ```
@@ -68,6 +81,7 @@ Base URL: `http://localhost:8080`
 
 - `GET /api/users/{id}`
   - Response: obiekt uzytkownika
+  - 200 OK
   - 404 gdy nie istnieje
 
 - `POST /api/users`
@@ -80,7 +94,9 @@ Base URL: `http://localhost:8080`
   - Walidacje:
     - email poprawny i unikalny
   - Response: utworzony uzytkownik
-  - 400 dla blednych danych, 409 gdy email zajety
+  - 200 OK
+  - 400 dla blednych danych
+  - 409 gdy email zajety
 
 - `DELETE /api/users/{id}`
   - 204 No Content
@@ -105,23 +121,31 @@ Base URL: `http://localhost:8082`
     - brak nakladania jazd instruktora
     - trainee ma role TRAINEE, instructor ma role INSTRUCTOR (weryfikacja w user-service)
   - Response: rezerwacja ze statusem PENDING
-  - 400 dla blednych danych, 422 dla naruszen biznesowych, 502 gdy user-service niedostepny
+  - 200 OK
+  - 400 dla blednych danych
+  - 422 dla naruszen biznesowych
+  - 502 gdy user-service niedostepny
 
 - `POST /api/bookings/{id}/confirm`
   - Walidacje: nie mozna potwierdzic anulowanej rezerwacji
   - Response: rezerwacja ze statusem CONFIRMED
-  - 404 gdy nie istnieje, 422 gdy reguly biznesowe
+  - 200 OK
+  - 404 gdy nie istnieje
+  - 422 gdy reguly biznesowe
 
 - `POST /api/bookings/{id}/cancel`
   - Response: rezerwacja ze statusem CANCELLED
+  - 200 OK
   - 404 gdy nie istnieje
 
 - `GET /api/bookings/{id}`
   - Response: rezerwacja
+  - 200 OK
   - 404 gdy nie istnieje
 
 - `GET /api/bookings/trainees/{traineeId}`
   - Response: lista rezerwacji kursanta
+  - 200 OK
 
 ### rewards-service
 Base URL: `http://localhost:8083`
@@ -131,6 +155,7 @@ Base URL: `http://localhost:8083`
 
 - `GET /api/rewards/{traineeId}`
   - Response: konto punktow
+  - 200 OK
   - 404 gdy nie istnieje
 
 - `POST /api/rewards/earn`
@@ -138,7 +163,9 @@ Base URL: `http://localhost:8083`
     - `traineeId` (long, required)
     - `points` (int, required, min 1)
   - Response: konto punktow po dodaniu
-  - 400 dla blednych danych, 422 dla naruszen biznesowych
+  - 200 OK
+  - 400 dla blednych danych
+  - 422 dla naruszen biznesowych
 
 - `POST /api/rewards/lottery`
   - Body:
@@ -146,7 +173,9 @@ Base URL: `http://localhost:8083`
   - Walidacje:
     - koszt losowania 10 punktow
   - Response: konto punktow po losowaniu
-  - 404 gdy brak konta, 422 gdy brak punktow
+  - 200 OK
+  - 404 gdy brak konta
+  - 422 gdy brak punktow
 
 - `POST /api/rewards/coin-flip`
   - Body:
@@ -155,7 +184,9 @@ Base URL: `http://localhost:8083`
   - Walidacje:
     - nie mozna postawic wiecej niz sie ma
   - Response: konto punktow po grze
-  - 404 gdy brak konta, 422 gdy brak punktow
+  - 200 OK
+  - 404 gdy brak konta
+  - 422 gdy brak punktow
 
 ## Logowanie
 Serwisy loguja zdarzenia biznesowe (utworzenie uzytkownika, rezerwacje, przyznanie punktow).

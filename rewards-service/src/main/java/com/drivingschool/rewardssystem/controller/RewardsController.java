@@ -6,6 +6,8 @@ import com.drivingschool.rewardssystem.controller.dto.LotteryRequest;
 import com.drivingschool.rewardssystem.controller.dto.RewardsAccountResponse;
 import com.drivingschool.rewardssystem.model.RewardsAccount;
 import com.drivingschool.rewardssystem.service.RewardsService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,23 +27,42 @@ public class RewardsController {
     }
 
     @GetMapping("/{traineeId}")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Account found"),
+            @ApiResponse(responseCode = "404", description = "Account not found")
+    })
     public RewardsAccountResponse getAccount(@PathVariable("traineeId") Long traineeId) {
         return RewardsAccountResponse.from(rewardsService.getAccount(traineeId));
     }
 
     @PostMapping("/earn")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Points earned"),
+            @ApiResponse(responseCode = "400", description = "Invalid request data"),
+            @ApiResponse(responseCode = "422", description = "Business rule violation")
+    })
     public RewardsAccountResponse earnPoints(@Valid @RequestBody EarnPointsRequest request) {
         RewardsAccount account = rewardsService.earnPoints(request.getTraineeId(), request.getPoints());
         return RewardsAccountResponse.from(account);
     }
 
     @PostMapping("/lottery")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lottery draw result"),
+            @ApiResponse(responseCode = "404", description = "Account not found"),
+            @ApiResponse(responseCode = "422", description = "Business rule violation")
+    })
     public RewardsAccountResponse lotteryDraw(@Valid @RequestBody LotteryRequest request) {
         RewardsAccount account = rewardsService.lotteryDraw(request.getTraineeId());
         return RewardsAccountResponse.from(account);
     }
 
     @PostMapping("/coin-flip")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Coin flip result"),
+            @ApiResponse(responseCode = "404", description = "Account not found"),
+            @ApiResponse(responseCode = "422", description = "Business rule violation")
+    })
     public RewardsAccountResponse coinFlip(@Valid @RequestBody CoinFlipRequest request) {
         RewardsAccount account = rewardsService.coinFlip(request.getTraineeId(), request.getWagerPoints());
         return RewardsAccountResponse.from(account);

@@ -1,7 +1,7 @@
 package com.drivingschool.rewardssystem.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
@@ -19,13 +19,16 @@ class RewardsControllerIntegrationTest {
     @LocalServerPort
     private int port;
 
-    @Test
-    void earnPointsViaHttp() throws Exception {
-        String payload = "{\"traineeId\":5,\"points\":20}";
-
+    @BeforeEach
+    void setUpClient() {
         client = RestTestClient.bindToServer()
                 .baseUrl("http://localhost:" + port)
                 .build();
+    }
+
+    @Test
+    void earnPointsViaHttp() throws Exception {
+        String payload = "{\"traineeId\":5,\"points\":20}";
 
         client.post()
                 .uri("/api/rewards/earn")
@@ -37,6 +40,23 @@ class RewardsControllerIntegrationTest {
                 .consumeWith(result -> {
                     String body = result.getResponseBody();
                     assertThat(body).contains("\"points\":20");
+                });
+    }
+
+    @Test
+    void earnPointsValidationError() {
+        String payload = "{\"traineeId\":5,\"points\":0}";
+
+        client.post()
+                .uri("/api/rewards/earn")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(payload)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .consumeWith(result -> {
+                    String body = result.getResponseBody();
+                    assertThat(body).contains("points");
                 });
     }
 }

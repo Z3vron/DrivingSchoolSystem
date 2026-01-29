@@ -60,6 +60,23 @@ class UserControllerIntegrationTest {
                     assertThat(users).hasSize(1);
                 });
     }
+
+    @Test
+    void testCreateUserValidationError() {
+        User invalidUser = new User(null, "", "TestSurname", "not-an-email", null, null);
+
+        client.post()
+                .uri("/api/users")
+                .body(invalidUser)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .consumeWith(result -> {
+                    String body = result.getResponseBody();
+                    assertThat(body).contains("email");
+                });
+    }
+
     @Test
     void testDeleteUser() {
         User userToDelete = userRepository.save(new User(null, "Delete", "Me", "delete@example.com", null, Role.TRAINEE));

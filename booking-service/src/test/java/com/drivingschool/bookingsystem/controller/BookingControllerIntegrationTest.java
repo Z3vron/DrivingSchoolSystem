@@ -72,4 +72,22 @@ class BookingControllerIntegrationTest {
                     assertThat(body).contains("\"status\":\"PENDING\"");
                 });
     }
+
+    @Test
+    void createBookingValidationError() {
+        String payload = "{\"traineeId\":1,\"instructorId\":2," +
+                "\"startTime\":\"2030-01-01T10:00:00\"}";
+
+        client.post()
+                .uri("/api/bookings")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(payload)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .consumeWith(result -> {
+                    String body = result.getResponseBody();
+                    assertThat(body).contains("endTime");
+                });
+    }
 }

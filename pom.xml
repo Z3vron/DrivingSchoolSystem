@@ -13,6 +13,7 @@
     <properties>
         <java.version>17</java.version>
         <spring.boot.version>4.0.2</spring.boot.version>
+        <springdoc.version>2.8.0</springdoc.version>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <nvd.api.key>${env.NVD_API_KEY}</nvd.api.key>
@@ -36,6 +37,11 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
