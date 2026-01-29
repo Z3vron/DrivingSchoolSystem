@@ -2,6 +2,7 @@ package com.drivingschool.rewardssystem.exception;
 
 import com.drivingschool.rewardssystem.controller.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,7 +23,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(BusinessRuleException.class)
     public ResponseEntity<ErrorResponse> handleBusiness(BusinessRuleException ex) {
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+        return ResponseEntity.status(HttpStatusCode.valueOf(422))
                 .body(new ErrorResponse(ex.getMessage(), null));
     }
 
