@@ -1,8 +1,11 @@
 package com.drivingschool.drivingschoolsystem.controller;
 
+import com.drivingschool.drivingschoolsystem.controller.dto.ErrorResponse;
 import com.drivingschool.drivingschoolsystem.model.User;
 import com.drivingschool.drivingschoolsystem.service.UserService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -39,7 +42,10 @@ public class UserController {
     @GetMapping("/{id}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User found"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public User getUser(@PathVariable("id") Long id) {
         return userService.getUser(id);
@@ -48,8 +54,14 @@ public class UserController {
     @PostMapping
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User created"),
-            @ApiResponse(responseCode = "400", description = "Invalid request data"),
-            @ApiResponse(responseCode = "409", description = "Email already in use")
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Email already in use",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public User createUser(@Valid @RequestBody User user) {
         return userService.createUser(user);
@@ -58,7 +70,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "User deleted"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);

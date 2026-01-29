@@ -60,6 +60,15 @@ public class BookingService {
         return saved;
     }
 
+    public void deleteBooking(Long id) {
+        Booking booking = getBooking(id);
+        if (booking.getStatus() != Booking.Status.CANCELLED) {
+            throw new BusinessRuleException("Only cancelled bookings can be deleted");
+        }
+        bookingRepository.delete(booking);
+        logger.info("Booking deleted id={}", id);
+    }
+
     public List<Booking> getTraineeBookings(Long traineeId) {
         return bookingRepository.findByTraineeId(traineeId);
     }

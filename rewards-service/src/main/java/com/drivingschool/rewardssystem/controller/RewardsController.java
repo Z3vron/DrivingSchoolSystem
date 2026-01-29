@@ -2,10 +2,13 @@ package com.drivingschool.rewardssystem.controller;
 
 import com.drivingschool.rewardssystem.controller.dto.CoinFlipRequest;
 import com.drivingschool.rewardssystem.controller.dto.EarnPointsRequest;
+import com.drivingschool.rewardssystem.controller.dto.ErrorResponse;
 import com.drivingschool.rewardssystem.controller.dto.LotteryRequest;
 import com.drivingschool.rewardssystem.controller.dto.RewardsAccountResponse;
 import com.drivingschool.rewardssystem.model.RewardsAccount;
 import com.drivingschool.rewardssystem.service.RewardsService;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -29,7 +32,10 @@ public class RewardsController {
     @GetMapping("/{traineeId}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Account found"),
-            @ApiResponse(responseCode = "404", description = "Account not found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public RewardsAccountResponse getAccount(@PathVariable("traineeId") Long traineeId) {
         return RewardsAccountResponse.from(rewardsService.getAccount(traineeId));
@@ -38,8 +44,14 @@ public class RewardsController {
     @PostMapping("/earn")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Points earned"),
-            @ApiResponse(responseCode = "400", description = "Invalid request data"),
-            @ApiResponse(responseCode = "422", description = "Business rule violation")
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Business rule violation",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public RewardsAccountResponse earnPoints(@Valid @RequestBody EarnPointsRequest request) {
         RewardsAccount account = rewardsService.earnPoints(request.getTraineeId(), request.getPoints());
@@ -49,8 +61,14 @@ public class RewardsController {
     @PostMapping("/lottery")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lottery draw result"),
-            @ApiResponse(responseCode = "404", description = "Account not found"),
-            @ApiResponse(responseCode = "422", description = "Business rule violation")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Business rule violation",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public RewardsAccountResponse lotteryDraw(@Valid @RequestBody LotteryRequest request) {
         RewardsAccount account = rewardsService.lotteryDraw(request.getTraineeId());
@@ -60,8 +78,14 @@ public class RewardsController {
     @PostMapping("/coin-flip")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Coin flip result"),
-            @ApiResponse(responseCode = "404", description = "Account not found"),
-            @ApiResponse(responseCode = "422", description = "Business rule violation")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Business rule violation",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public RewardsAccountResponse coinFlip(@Valid @RequestBody CoinFlipRequest request) {
         RewardsAccount account = rewardsService.coinFlip(request.getTraineeId(), request.getWagerPoints());

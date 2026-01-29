@@ -54,6 +54,13 @@ export NVD_API_KEY=twoj_klucz
 W obu trybach uruchamiane sa te same testy jednostkowe i integracyjne.
 Roznica dotyczy jedynie skanowania OWASP Dependency-Check.
 
+# Integracja z usluga zewnetrzna (pogoda)
+W `booking-service` dodano integracje HTTP z zewnetrznym API Open-Meteo:
+- Klient HTTP: `WeatherClient` uzywa `RestClient` do pobrania prognozy godzinowej.
+- Endpoint aplikacji: `GET /api/bookings/weather?startTime=...` zwraca prognoze dla wskazanego czasu rezerwacji.
+- Konfiguracja: `weather.base-url`, `weather.latitude`, `weather.longitude` (mozliwe nadpisanie przez zmienne srodowiskowe).
+- Gdy API pogodowe jest niedostepne lub brak danych dla czasu, zwracany jest blad 502.
+
 
 
 # Wdrożenie

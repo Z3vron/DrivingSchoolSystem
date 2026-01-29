@@ -138,6 +138,12 @@ Base URL: `http://localhost:8082`
   - 200 OK
   - 404 gdy nie istnieje
 
+- `DELETE /api/bookings/{id}`
+  - Usuwa tylko anulowana rezerwacje
+  - 204 No Content
+  - 404 gdy nie istnieje
+  - 422 gdy rezerwacja nie jest anulowana
+
 - `GET /api/bookings/{id}`
   - Response: rezerwacja
   - 200 OK
@@ -146,6 +152,13 @@ Base URL: `http://localhost:8082`
 - `GET /api/bookings/trainees/{traineeId}`
   - Response: lista rezerwacji kursanta
   - 200 OK
+
+- `GET /api/bookings/weather?startTime=YYYY-MM-DDTHH:MM:SS`
+  - Opis: prognoza pogody dla terminu rezerwacji (czas w UTC, zaokraglany do pelnej godziny)
+  - Response: `startTime`, `temperatureC`, `weatherCode`, `description`
+  - 200 OK
+  - 400 dla blednego formatu daty
+  - 502 gdy usluga pogodowa niedostepna
 
 ### rewards-service
 Base URL: `http://localhost:8083`
