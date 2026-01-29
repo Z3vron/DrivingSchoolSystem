@@ -7,6 +7,7 @@ import com.drivingschool.bookingsystem.controller.dto.WeatherResponse;
 import com.drivingschool.bookingsystem.model.Booking;
 import com.drivingschool.bookingsystem.service.BookingService;
 import com.drivingschool.bookingsystem.service.WeatherService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,6 +37,7 @@ public class BookingController {
     private final BookingService bookingService;
     private final WeatherService weatherService;
 
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Spring injects services; controller does not expose them.")
     public BookingController(BookingService bookingService, WeatherService weatherService) {
         this.bookingService = bookingService;
         this.weatherService = weatherService;
