@@ -27,7 +27,7 @@ class RewardsControllerIntegrationTest {
     }
 
     @Test
-    void earnPointsViaHttp() throws Exception {
+    void earnPointsViaHttp() {
         String payload = "{\"traineeId\":5,\"points\":20}";
 
         client.post()

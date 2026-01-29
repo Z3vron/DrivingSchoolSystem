@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
@@ -55,7 +54,7 @@ class BookingControllerIntegrationTest {
     }
 
     @Test
-    void createBookingViaHttp() throws Exception {
+    void createBookingViaHttp() {
         String payload = "{\"traineeId\":1,\"instructorId\":2," +
                 "\"startTime\":\"2030-01-01T10:00:00\"," +
                 "\"endTime\":\"2030-01-01T11:00:00\"}";
